@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-
-
 	"github.com/AnnaRozhnova/blog"
 	"github.com/AnnaRozhnova/blog/pkg/handler"
 	"github.com/AnnaRozhnova/blog/pkg/repository"
@@ -28,12 +26,7 @@ func main() {
 		fmt.Println("Error while loading env file: ", err)
 	}
 
-	fmt.Println("kkkkkkk ", viper.GetString("db.host"))
-	fmt.Println(viper.GetString("db.port"))
-	fmt.Println(viper.GetString("db.username"))
-	fmt.Println(os.Getenv("DB_PASSWORD"))
-	fmt.Println(viper.GetString("db.dbname"))
-	fmt.Println(viper.GetString("db.sslmode"))
+
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
@@ -48,7 +41,7 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	srv := new(blog.Server)
-	err = srv.Run(viper.GetString("port"), handlers.InitRoutes())
+	err = srv.Run(os.Getenv("PORT"), handlers.InitRoutes())
 
 	if err != nil {
 		fmt.Println("Error: ", err)
