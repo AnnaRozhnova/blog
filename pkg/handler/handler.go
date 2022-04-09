@@ -28,7 +28,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		posts.POST("/create", h.createPost)
 		posts.GET("/", h.getAllPosts)
-		posts.GET("/:username/:id", h.getPostById)
+		posts.GET("/:id", h.getPostById)
 		posts.GET("/:username", h.getPostByUsername)
 	}
 
