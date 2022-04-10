@@ -56,6 +56,7 @@ func (h *Handler) getPostById(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, map[string]interface{}{"post": post})
 }
 
