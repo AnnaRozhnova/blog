@@ -1,7 +1,7 @@
 
 db:
-  username: "hzoiglhpbprrgg"
-  host: "ec2-99-80-170-190.eu-west-1.compute.amazonaws.com"
+  username: "sifsfogavlcozt"
+  host: "ec2-54-228-32-29.eu-west-1.compute.amazonaws.com"
   port: "5432"
-  dbname: "d97vmbk6hcmjvh"
+  dbname: "drjfo2ijg9d3b"
   sslmode: "require"
