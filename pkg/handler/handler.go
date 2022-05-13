@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/AnnaRozhnova/blog/pkg/service"
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 const usernameCtx = "userId"
@@ -16,15 +17,30 @@ func NewHandler(s *service.Service) *Handler {
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
+	
 	router := gin.New()
-	auth := router.Group("/auth", h.addHeader)
+
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:3000"},
+		AllowCredentials: true,
+	})
+	
+	router.Use(c)
+
+
+	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
 		auth.POST("/sign-out", h.signOut)
 	}
+	
+	users := router.Group("/users") 
+	{
+		users.GET("/", h.getAllUsers)
+	}
 
-	posts := router.Group("/posts", h.addHeader)
+	posts := router.Group("/posts")
 	{
 		posts.POST("/create", h.createPost)
 		posts.GET("/", h.getAllPosts)
@@ -32,7 +48,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		posts.GET("/:username", h.getPostByUsername)
 	}
 
-	comments := router.Group("/comments", h.addHeader) 
+	comments := router.Group("/comments") 
 	{
 		comments.POST("/create", h.createComment)
 		comments.GET("/:id", h.getComments)

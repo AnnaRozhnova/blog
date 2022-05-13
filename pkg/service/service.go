@@ -10,6 +10,9 @@ type Authorization interface {
 	GetUser(username, password string) (blog.User, error)
 }
 
+type User interface {
+	GetAll() ([]blog.User, error)
+}
 type Post interface {
 	Create(post blog.Post) (int, error)
 	GetAll() ([]blog.Post, error)
@@ -24,6 +27,7 @@ type Comment interface {
 
 type Service struct {
 	Authorization
+	User
 	Post
 	Comment
 }
@@ -32,6 +36,7 @@ type Service struct {
 func NewService(repo *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repo.Authorization),
+		User: 		   newUserService(repo.User),		
 		Post:          NewPostService(repo.Post),
 		Comment:	   NewCommentService(repo.Comment),
 	}

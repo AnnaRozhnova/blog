@@ -30,13 +30,9 @@ func (h *Handler) signUp(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{"username": user.Username})
 }
 
-type signInInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
 
 func (h *Handler) signIn(c *gin.Context) {
-	var input signInInput
+	var input blog.User
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -55,7 +51,7 @@ func (h *Handler) signIn(c *gin.Context) {
 
 func(h *Handler) signOut(c *gin.Context) {
 	session, _ := store.Get(c.Request, "session")
-	session.Values[usernameCtx] = nil
+	delete(session.Values, usernameCtx)
 	session.Save(c.Request, c.Writer)
 
 	c.JSON(http.StatusOK, map[string]interface{}{"isOk": "ok"})

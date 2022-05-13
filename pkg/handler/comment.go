@@ -22,7 +22,7 @@ func (h *Handler) getComments(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{"comments": comments})
+	c.JSON(http.StatusOK, comments)
 }
 
 
