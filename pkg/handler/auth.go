@@ -55,5 +55,5 @@ func(h *Handler) signOut(c *gin.Context) {
 	//delete(session.Values, usernameCtx)
 	session.Save(c.Request, c.Writer)
 
-	c.JSON(http.StatusOK, map[string]interface{}{"isOk": "ok"})
+	c.JSON(http.StatusOK, map[string]interface{}{"isOk": session.Options.MaxAge})
 }
