@@ -39,7 +39,7 @@ func (h *Handler) getAllPosts(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, map[string]interface{}{"posts": posts})
+	c.JSON(http.StatusOK, posts)
 }
 
 
