@@ -21,7 +21,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:3000"},
+		//AllowedOrigins: []string{"http://localhost:3000"},
+		AllowedOrigins: []string{"http://192.168.1.48:3000", "http://localhost:3000", "https://rozhnova-client.herokuapp.com"},
 		AllowCredentials: true,
 	})
 	
