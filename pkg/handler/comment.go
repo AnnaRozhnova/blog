@@ -33,13 +33,16 @@ func (h *Handler) createComment(c *gin.Context) {
 	if err := c.BindJSON(&comment); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
-	session, _ := store.Get(c.Request, "session")
+	/*
+	session, _ := store.Get(c.Request, comment.Username)
+	
 	username, ok := session.Values[usernameCtx]
 	if !ok {
 		newErrorResponse(c, http.StatusInternalServerError, "Session values error")
 		return
 	}
 	comment.Username = username.(string)
+	*/
 	err := h.service.Comment.Create(comment)
 	if err!= nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())

@@ -14,15 +14,15 @@ func (h *Handler) createPost(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-
-	session, _ := store.Get(c.Request, "session")
+	/*
+	session, _ := store.Get(c.Request, post.Username)
 	username, ok := session.Values[usernameCtx]
 	if !ok {
 		newErrorResponse(c, http.StatusBadRequest, "Session values error")
 		return
 	}
 	post.Username = username.(string)
-
+*/
 	id, err := h.service.Post.Create(post)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
