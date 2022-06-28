@@ -6,7 +6,7 @@ import (
 	cors "github.com/rs/cors/wrapper/gin"
 )
 
-const usernameCtx = "userId"
+//const usernameCtx = "userId"
 
 type Handler struct {
 	service *service.Service
@@ -33,12 +33,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
-		auth.POST("/sign-out", h.signOut)
+		auth.GET("/sign-out", h.signOut)
 	}
 	
 	users := router.Group("/users") 
 	{
 		users.GET("/", h.getAllUsers)
+		users.GET("/:username", h.getUserByUsername)
 	}
 
 	posts := router.Group("/posts")

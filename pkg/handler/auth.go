@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/AnnaRozhnova/blog"
 	"github.com/gin-gonic/gin"
@@ -23,8 +24,13 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	session, _ := store.Get(c.Request, user.Username)
-	session.Values[usernameCtx] = user.Username
+	session, err := store.New(c.Request, user.Username)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	//session.Values[usernameCtx] = user.Username
 	session.Save(c.Request, c.Writer)
 
 	c.JSON(http.StatusOK, map[string]interface{}{"username": user.Username})
@@ -43,8 +49,12 @@ func (h *Handler) signIn(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	session, _ := store.Get(c.Request, user.Username)
-	session.Values[usernameCtx] = user.Username
+	session, err := store.New(c.Request, user.Username)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	//session.Values[usernameCtx] = user.Username
 	session.Save(c.Request, c.Writer)
 
 	c.JSON(http.StatusOK, map[string]interface{}{"username": user.Username})
@@ -53,15 +63,15 @@ func (h *Handler) signIn(c *gin.Context) {
 
 
 func(h *Handler) signOut(c *gin.Context) {
-	var json map[string]string
-	if err := c.BindJSON(&json); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
-		return
-	}
-	session, _ := store.Get(c.Request, json["username"])
+	cookie := c.Request.Header["Cookie"][0]
+
+	
+	username := strings.Split(cookie, "=")
+	session, _ := store.Get(c.Request, username[0])
 	session.Options.MaxAge = -1
 	//delete(session.Values, usernameCtx)
 	session.Save(c.Request, c.Writer)
 
 	c.JSON(http.StatusOK, map[string]interface{}{"max_age": session.Options.MaxAge})
+	
 }

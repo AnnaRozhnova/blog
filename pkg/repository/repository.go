@@ -11,6 +11,7 @@ type Authorization interface {
 }
 type User interface {
 	GeyAll() ([]blog.User, error)
+	GetByUsername(username string) (blog.User, error)
 }
 type Post interface {
 	Create(post blog.Post) (int, error)

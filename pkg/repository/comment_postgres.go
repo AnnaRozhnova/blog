@@ -29,7 +29,5 @@ func (r *CommentPostgres) GetByPostId(postId int) ([]blog.Comment, error) {
 	var comments []blog.Comment
 	query := fmt.Sprintf("SELECT * FROM %s WHERE post_id=$1", commentsTable)
 	err := r.db.Select(&comments, query, postId)
-	
-	fmt.Println("Postgers COMMENTS: ", comments)
 	return comments, err
 }
