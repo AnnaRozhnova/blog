@@ -8,21 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// creates new post
 func (h *Handler) createPost(c *gin.Context) {
+	// check if the user logged in
+	if c.Request.Header["Cookie"][0] == "" {
+		newErrorResponse(c, http.StatusBadRequest, "Loged out")
+		return
+	}
 	var post blog.Post
 	if err := c.BindJSON(&post); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	/*
-	session, _ := store.Get(c.Request, post.Username)
-	username, ok := session.Values[usernameCtx]
-	if !ok {
-		newErrorResponse(c, http.StatusBadRequest, "Session values error")
-		return
-	}
-	post.Username = username.(string)
-*/
+
 	id, err := h.service.Post.Create(post)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -33,6 +31,7 @@ func (h *Handler) createPost(c *gin.Context) {
 
 }
 
+// getAllPosts handles /posts/ requests
 func (h *Handler) getAllPosts(c *gin.Context) {
 	posts, err := h.service.Post.GetAll()
 	if err != nil {
@@ -44,8 +43,9 @@ func (h *Handler) getAllPosts(c *gin.Context) {
 
 
 
-
+// getPostById handles /posts/:id requests
 func (h *Handler) getPostById(c *gin.Context) {
+	// get id of the post from URL and convert it to int
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
@@ -62,7 +62,7 @@ func (h *Handler) getPostById(c *gin.Context) {
 
 
 
-
+// getPostByUsername handles /posts/:username requests
 func (h *Handler) getPostByUsername(c *gin.Context) {
 	username:= c.Param("username")
 	posts, err := h.service.Post.GetByUsername(username)

@@ -6,26 +6,25 @@ import (
 	cors "github.com/rs/cors/wrapper/gin"
 )
 
-//const usernameCtx = "userId"
 
 type Handler struct {
 	service *service.Service
 }
 
+// NewHandler creates new Handler instance
 func NewHandler(s *service.Service) *Handler {
 	return &Handler{service: s}
 }
 
+// InitRoutes creates a new router group
 func (h *Handler) InitRoutes() *gin.Engine {
-	
-	router := gin.New()
 
 	c := cors.New(cors.Options{
-		//AllowedOrigins: []string{"http://localhost:3000"},
 		AllowedOrigins: []string{"http://192.168.1.48:3000", "http://localhost:3000", "https://rozhnova-client.herokuapp.com"},
 		AllowCredentials: true,
 	})
 	
+	router := gin.New()
 	router.Use(c)
 
 

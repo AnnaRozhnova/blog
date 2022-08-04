@@ -18,15 +18,17 @@ import (
 func main() {
 
 
-
+	// config
 	if err := initConfig(); err != nil {
 		fmt.Println("Error while initializing configs: ", err)
 	}
+
+	// loading .env file
 	if err := godotenv.Load(); err != nil {
 		fmt.Println("Error while loading env file: ", err)
 	}
 
-
+	// connect to Postgres
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
@@ -36,11 +38,19 @@ func main() {
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 
+	// clean architecture: handler -> service -> repository
+
+	// repository init
 	repos := repository.NewRepository(db)
+	// service init
 	services := service.NewService(repos)
+	// handler init
 	handlers := handler.NewHandler(services)
 
+	// server init
 	srv := new(blog.Server)
+
+	// run server
 	err = srv.Run(os.Getenv("PORT"), handlers.InitRoutes())
 
 	if err != nil {

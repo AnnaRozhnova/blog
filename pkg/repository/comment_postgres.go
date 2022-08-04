@@ -11,10 +11,12 @@ type CommentPostgres struct {
 	db *sqlx.DB
 }
 
+// NewCommentPostgres creates new CommentPostgres instance
 func NewCommentPostgres(db *sqlx.DB) *CommentPostgres {
 	return &CommentPostgres{db: db}
 }
 
+// Create inserts new comment into database
 func (r *CommentPostgres) Create(comment blog.Comment) error {
 	var id int
 	query := fmt.Sprintf("INSERT INTO %s (body, username, post_id) values ($1, $2, $3) RETURNING id", commentsTable)
@@ -25,6 +27,7 @@ func (r *CommentPostgres) Create(comment blog.Comment) error {
 	return nil
 }
 
+// GetByPostId gets comments on a particular post
 func (r *CommentPostgres) GetByPostId(postId int) ([]blog.Comment, error) {
 	var comments []blog.Comment
 	query := fmt.Sprintf("SELECT * FROM %s WHERE post_id=$1", commentsTable)

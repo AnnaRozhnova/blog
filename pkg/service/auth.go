@@ -21,7 +21,7 @@ func NewAuthService(repo repository.Authorization) *AuthService {
 }
 
 func (s *AuthService) CreateUser(user blog.User) error {
-
+	// generate hash
 	user.Password = generatePasswordHash(user.Password)
 	return s.repo.CreateUser(user)
 }
@@ -31,6 +31,7 @@ func (s *AuthService) GetUser(username, password string) (blog.User, error) {
 	return s.repo.GetUser(username, passwordHash)
 }
 
+// generatePasswordHash encods password
 func generatePasswordHash(password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))

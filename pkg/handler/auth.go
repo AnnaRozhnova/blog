@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -9,8 +10,10 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+// NewCookieStore returns a new CookieStore
 var store = sessions.NewCookieStore([]byte("secret-key"))
 
+// signUp creates new user
 func (h *Handler) signUp(c *gin.Context) {
 	var user blog.User
 	if err := c.BindJSON(&user); err != nil {
@@ -24,20 +27,20 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
+	// create a new session
 	session, err := store.New(c.Request, user.Username)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	//session.Values[usernameCtx] = user.Username
+	// add session to the response
 	session.Save(c.Request, c.Writer)
 
 	c.JSON(http.StatusOK, map[string]interface{}{"username": user.Username})
 }
 
 
-
+// sign-in handler
 func (h *Handler) signIn(c *gin.Context) {
 	var input blog.User
 	if err := c.BindJSON(&input); err != nil {
@@ -49,27 +52,33 @@ func (h *Handler) signIn(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	// create a new session
 	session, err := store.New(c.Request, user.Username)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	//session.Values[usernameCtx] = user.Username
+	session.Options.HttpOnly = false
+	// add session to the response
 	session.Save(c.Request, c.Writer)
+
+	fmt.Println("SESSION !!!!!!!!!!!!!!")
+	fmt.Println(session.Options)
 
 	c.JSON(http.StatusOK, map[string]interface{}{"username": user.Username})
 }
 
 
-
+// sign-out handler
 func(h *Handler) signOut(c *gin.Context) {
 	cookie := c.Request.Header["Cookie"][0]
 
-	
+	// get username from the cookie
 	username := strings.Split(cookie, "=")
 	session, _ := store.Get(c.Request, username[0])
+	// set MaxAge to -1 to delete cookie from the store
 	session.Options.MaxAge = -1
-	//delete(session.Values, usernameCtx)
 	session.Save(c.Request, c.Writer)
 
 	c.JSON(http.StatusOK, map[string]interface{}{"max_age": session.Options.MaxAge})
