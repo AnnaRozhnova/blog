@@ -60,6 +60,7 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 	session.Options.HttpOnly = false
+	session.Options.Secure = true
 	// add session to the response
 	session.Save(c.Request, c.Writer)
 
