@@ -1,15 +1,17 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
 	"github.com/AnnaRozhnova/blog"
+	"github.com/AnnaRozhnova/blog/pkg/handler"
 	"github.com/AnnaRozhnova/blog/pkg/repository"
 	"github.com/AnnaRozhnova/blog/pkg/service"
-	"github.com/AnnaRozhnova/blog/server/pkg/handler"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -37,6 +39,10 @@ func main() {
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 
+	if err != nil {
+		logrus.Fatalf("failed to initialize db: %s", err.Error())
+	}
+
 
 	// clean architecture: handler -> service -> repository
 
@@ -45,16 +51,26 @@ func main() {
 	// service init
 	services := service.NewService(repos)
 	// handler init
-	handlers := handler.NewHandler(services)
+	handlers := handler.NewHandler(services, viper.GetString("baseurl"))
 
 	// server init
 	srv := new(blog.Server)
 
 	// run server
-	err = srv.Run(os.Getenv("PORT"), handlers.InitRoutes())
+	
+		if err = srv.Run(os.Getenv("PORT"), handlers.InitRoutes()); err != nil {
+			logrus.Fatalf("error occured while running http server: %s", err.Error())
+		}
+	
 
-	if err != nil {
-		fmt.Println("Error: ", err)
+	// shut down the server
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logrus.Errorf("error occured on server shutting down: %s", err.Error())
+	}
+
+	// close database connection
+	if err := db.Close(); err != nil {
+		logrus.Errorf("error occured on db connection close: %s", err.Error())
 	}
 }
 

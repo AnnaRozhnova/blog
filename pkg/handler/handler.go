@@ -9,18 +9,19 @@ import (
 
 type Handler struct {
 	service *service.Service
+	baseurl string
 }
 
 // NewHandler creates new Handler instance
-func NewHandler(s *service.Service) *Handler {
-	return &Handler{service: s}
+func NewHandler(s *service.Service, b string) *Handler {
+	return &Handler{service: s, baseurl: b}
 }
 
 // InitRoutes creates a new router group
 func (h *Handler) InitRoutes() *gin.Engine {
 
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://192.168.1.48:3000", "http://localhost:3000", "https://rozhnova-client.herokuapp.com", "https://annarozhnova.github.io"},
+		AllowedOrigins: []string{"http://" + h.baseurl + ":3000", "https://rozhnova-client.herokuapp.com/"},
 		AllowCredentials: true,
 	})
 	
