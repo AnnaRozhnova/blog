@@ -1,4 +1,4 @@
-module github.com/AnnaRozhnova/blog
+module github.com/AnnaRozhnova/blog/
 
 go 1.14
 

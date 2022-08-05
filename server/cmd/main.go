@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/AnnaRozhnova/blog"
-	"github.com/AnnaRozhnova/blog/pkg/handler"
 	"github.com/AnnaRozhnova/blog/pkg/repository"
 	"github.com/AnnaRozhnova/blog/pkg/service"
+	"github.com/AnnaRozhnova/blog/server/pkg/handler"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
