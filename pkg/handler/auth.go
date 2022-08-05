@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -59,13 +58,10 @@ func (h *Handler) signIn(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	session.Options.HttpOnly = false
-	session.Options.Secure = true
+
 	// add session to the response
 	session.Save(c.Request, c.Writer)
 
-	fmt.Println("SESSION !!!!!!!!!!!!!!")
-	fmt.Println(session.Options)
 
 	c.JSON(http.StatusOK, map[string]interface{}{"username": user.Username})
 }

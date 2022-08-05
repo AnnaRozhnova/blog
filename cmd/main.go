@@ -17,7 +17,6 @@ import (
 
 func main() {
 
-
 	// config
 	if err := initConfig(); err != nil {
 		fmt.Println("Error while initializing configs: ", err)
@@ -37,6 +36,7 @@ func main() {
 		DBName:   viper.GetString("db.dbname"),
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
+
 
 	// clean architecture: handler -> service -> repository
 

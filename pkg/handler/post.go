@@ -15,6 +15,7 @@ func (h *Handler) createPost(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, "Loged out")
 		return
 	}
+	
 	var post blog.Post
 	if err := c.BindJSON(&post); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())

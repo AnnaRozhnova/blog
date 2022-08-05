@@ -3,6 +3,7 @@ package blog
 import (
 	"context"
 	"net/http"
+	"time"
 )
 
 type Server struct {
@@ -15,6 +16,8 @@ func (s *Server) Run(port string, handler http.Handler) error {
 	s.httpServer = &http.Server{
 		Addr:           ":" + port,
 		Handler:        handler,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
 	}
 
 	return s.httpServer.ListenAndServe()
