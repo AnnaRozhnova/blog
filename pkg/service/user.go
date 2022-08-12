@@ -14,7 +14,6 @@ func newUserService(repo repository.User) *UserService {
 	return &UserService{repo: repo}
 }
 
-
 func (s *UserService) GetAll() ([]blog.User, error) {
 	return s.repo.GeyAll()
 }

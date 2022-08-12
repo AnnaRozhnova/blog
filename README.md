@@ -6,9 +6,17 @@
 
 ## HOWTO
 
-- run with `go run cmd/main.go`
-- test with https://rozhnova-client.herokuapp.com ([source code](https://github.com/AnnaRozhnova/blog-client) of the client app)
+- run server 
+  `git clone https://github.com/AnnaRozhnova/blog.git
+   cd blog
+   go run cmd/main.go`
+- run client
+  `git clone https://github.com/AnnaRozhnova/blog-client.git
+   cd blog-client
+   npm install
+   npm start --port 3000`
+    
 
 
 
-<img src="./images/make-run.png">
+<img src="./images/app.JPG">

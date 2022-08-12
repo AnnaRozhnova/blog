@@ -11,10 +11,13 @@ type UserPostgres struct {
 	db *sqlx.DB
 }
 
+
+
 // NewUserPostgres creates new UserPostgres instance
 func NewUserPostgres(db *sqlx.DB) *UserPostgres {
 	return &UserPostgres{db: db}
 }
+
 
 // GeyAll gets all users from database
 func (r *UserPostgres) GeyAll() ([]blog.User, error) {

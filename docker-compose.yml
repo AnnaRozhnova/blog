@@ -1,8 +1,0 @@
-version: "3.7"
-
-services:
-  blog:
-    build: ./
-    command: ./blog
-    ports:
-      - 8000:8000

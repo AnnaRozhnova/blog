@@ -1,4 +1,4 @@
-baseurl: "localhost"
+
 db:
   username: "sifsfogavlcozt"
   host: "ec2-54-228-32-29.eu-west-1.compute.amazonaws.com"

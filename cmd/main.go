@@ -51,16 +51,16 @@ func main() {
 	// service init
 	services := service.NewService(repos)
 	// handler init
-	handlers := handler.NewHandler(services, viper.GetString("baseurl"))
+	handlers := handler.NewHandler(services)
 
 	// server init
 	srv := new(blog.Server)
 
 	// run server
 	
-		if err = srv.Run(os.Getenv("PORT"), handlers.InitRoutes()); err != nil {
-			logrus.Fatalf("error occured while running http server: %s", err.Error())
-		}
+	if err = srv.Run(os.Getenv("PORT"), handlers.InitRoutes()); err != nil {
+		logrus.Fatalf("error occured while running http server: %s", err.Error())
+	}
 	
 
 	// shut down the server
