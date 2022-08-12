@@ -7,7 +7,7 @@
 ## HOWTO
 
 - run server\
-  `git clone https://github.com/AnnaRozhnova/blog.git\
+  `git clone https://github.com/AnnaRozhnova/blog.git  
    cd blog\
    go run cmd/main.go`\
 - run client\
