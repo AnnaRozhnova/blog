@@ -19,4 +19,3 @@
 
 
 
-<img src="./images/app2.JPG">
