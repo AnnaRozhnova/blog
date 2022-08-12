@@ -7,8 +7,8 @@
 ## HOWTO
 
 - run server\
-  `git clone https://github.com/AnnaRozhnova/blog.git<br/>
-   cd blog\
+ `git clone https://github.com/AnnaRozhnova/blog.git`
+ `cd blog`\
    go run cmd/main.go`\
 - run client\
   `git clone https://github.com/AnnaRozhnova/blog-client.git\
@@ -19,4 +19,4 @@
 
 
 
-<img src="./images/app1.JPG">
+<img src="./images/app2.JPG">
