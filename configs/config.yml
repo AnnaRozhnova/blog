@@ -1,7 +1,8 @@
 
 db:
-  username: "sifsfogavlcozt"
-  host: "ec2-54-228-32-29.eu-west-1.compute.amazonaws.com"
-  port: "5432"
-  dbname: "drjfo2ijg9d3b"
-  sslmode: "require"
+  db:
+  username: "anna"
+  host: "91.107.123.97"
+  port: "39610"
+  dbname: "blog"
+  sslmode: "disable"
