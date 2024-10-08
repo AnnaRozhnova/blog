@@ -2,17 +2,26 @@ package handler
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/AnnaRozhnova/blog"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
 )
 
 // NewCookieStore returns a new CookieStore
-var store = sessions.NewCookieStore([]byte("secret-key"))
+//var store = sessions.NewCookieStore([]byte("secret-key"))
 
-// signUp creates new user
+// @Summary SignUp
+// @Tags auth
+// @Description create account
+// @ID create-account
+// @Accept  json
+// @Produce  json
+// @Param input body blog.User true "account info"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /auth/sign-up [post]
 func (h *Handler) signUp(c *gin.Context) {
 	var user blog.User
 	if err := c.BindJSON(&user); err != nil {
@@ -26,48 +35,47 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	// create a new session
-	session, err := store.New(c.Request, user.Username)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-	// add session to the response
-	session.Save(c.Request, c.Writer)
-
 	c.JSON(http.StatusOK, map[string]interface{}{"username": user.Username})
 }
 
+type signInInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
 
-// sign-in handler
+// @Summary SignIn
+// @Tags auth
+// @Description login
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body blog.User true "credentials"
+// @Success 200 {string} string "token"
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /auth/sign-in [post]
 func (h *Handler) signIn(c *gin.Context) {
-	var input blog.User
+	var input signInInput
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	user, err := h.service.Authorization.GetUser(input.Username, input.Password)
+	
+	token, err := h.service.Authorization.GenerateToken(input.Username, input.Password)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	// create a new session
-	session, err := store.New(c.Request, user.Username)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	// add session to the response
-	session.Save(c.Request, c.Writer)
-
-
-	c.JSON(http.StatusOK, map[string]interface{}{"username": user.Username})
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"token": token,
+	})
 }
 
 
-// sign-out handler
+
+/*
 func(h *Handler) signOut(c *gin.Context) {
 	cookie := c.Request.Header["Cookie"][0]
 
@@ -80,4 +88,4 @@ func(h *Handler) signOut(c *gin.Context) {
 
 	c.JSON(http.StatusOK, map[string]interface{}{"max_age": session.Options.MaxAge})
 	
-}
+}*/

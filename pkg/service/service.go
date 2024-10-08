@@ -7,6 +7,8 @@ import (
 
 type Authorization interface {
 	CreateUser(user blog.User) error
+	GenerateToken(username, password string) (string, error)
+	ParseToken(token string) (int, error)
 	GetUser(username, password string) (blog.User, error)
 }
 

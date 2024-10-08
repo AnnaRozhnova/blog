@@ -3,7 +3,17 @@ package handler
 import (
 	"github.com/AnnaRozhnova/blog/pkg/service"
 	"github.com/gin-gonic/gin"
-	cors "github.com/rs/cors/wrapper/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	//"github.com/swaggo/gin-swagger/swaggerFiles"
+
+	//"github.com/swaggo/gin-swagger/swaggerFiles"
+
+	//"github.com/swaggo/gin-swagger/swaggerFiles"
+
+	_ "github.com/AnnaRozhnova/blog/docs"
 )
 
 
@@ -18,24 +28,19 @@ func NewHandler(s *service.Service) *Handler {
 
 // InitRoutes creates a new router group
 func (h *Handler) InitRoutes() *gin.Engine {
-
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:3000", "https://rozhnova-client.herokuapp.com"},
-		AllowCredentials: true,
-	})
 	
 	router := gin.New()
-	router.Use(c)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
-		auth.GET("/sign-out", h.signOut)
+		//auth.GET("/sign-out", h.signOut)
 	}
 	
-	users := router.Group("/users") 
+	users := router.Group("/users", h.userIdentity) 
 	{
 		users.GET("/", h.getAllUsers)
 		users.GET("/:username", h.getUserByUsername)
@@ -49,7 +54,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		posts.GET("/:username", h.getPostByUsername)
 	}
 
-	comments := router.Group("/comments") 
+	comments := router.Group("/comments", h.userIdentity) 
 	{
 		comments.POST("/create", h.createComment)
 		comments.GET("/:id", h.getComments)
